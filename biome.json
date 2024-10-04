@@ -7,7 +7,7 @@
     },
     "files": {
         "ignoreUnknown": false,
-        "ignore": ["node_module", "dist", "package-lock.json"]
+        "ignore": ["node_module", "dist", "package-lock.json", ".env*"]
     },
     "formatter": {
         "enabled": true,
@@ -27,10 +27,13 @@
             "nursery": {
                 "all": true,
                 "useStrictMode": "off",
-                "useConsistentMemberAccessibility": "off"
+                "useConsistentMemberAccessibility": "off",
+                "useImportRestrictions": "off"
             },
             "correctness": {
-                "noUndeclaredDependencies": "off"
+                "noUndeclaredDependencies": "off",
+                "useImportExtensions": "off",
+                "noNodejsModules": "off"
             },
             "complexity": {
                 "noStaticOnlyClass": "off"
@@ -41,6 +44,9 @@
             "style": {
                 "useImportType": "off",
                 "noImplicitBoolean": "off"
+            },
+            "performance": {
+                "noBarrelFile": "off"
             }
         }
     },
