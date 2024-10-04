@@ -1,0 +1,27 @@
+{
+    "name": "blacksmith-bot",
+    "version": "0.0.0",
+    "description": "telegram bot for scrobbling to lastfm",
+    "main": "index.ts",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/IrvingWash/blacksmith-bot.git"
+    },
+    "keywords": [
+        "lastfm",
+        "telegram"
+    ],
+    "author": "WI",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/IrvingWash/blacksmith-bot/issues"
+    },
+    "homepage": "https://github.com/IrvingWash/blacksmith-bot#readme",
+    "devDependencies": {
+        "tsx": "^4.19.1",
+        "typescript": "^5.6.2"
+    }
+}
