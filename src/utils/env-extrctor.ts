@@ -8,6 +8,8 @@ const enum EnvVars {
     FirebaseStorageBucket = "FirebaseStorageBucket",
     FirebaseMessagingSenderId = "FirebaseMessagingSenderId",
     FirebaseAppId = "FirebaseAppId",
+    LastFmApiKey = "LastFmApiKey",
+    LastFmSharedSecret = "LastFmSharedSecret",
 }
 
 export class EnvExtractor {
@@ -33,6 +35,14 @@ export class EnvExtractor {
 
     public firebaseAppId(): string {
         return this._envVariable(EnvVars.FirebaseAppId);
+    }
+
+    public lastFmApiKey(): string {
+        return this._envVariable(EnvVars.LastFmApiKey);
+    }
+
+    public lastFmSharedSecret(): string {
+        return this._envVariable(EnvVars.LastFmSharedSecret);
     }
 
     private _envVariable(name: EnvVars): string {

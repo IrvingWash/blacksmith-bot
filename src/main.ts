@@ -1,6 +1,7 @@
 import { config as configureEnvVars } from "dotenv";
 import { EnvExtractor } from "./utils/env-extrctor";
 import { Firebase } from "./firebase/firebase";
+import { LastFm } from "./lastfm/lastfm";
 
 main();
 
@@ -17,4 +18,6 @@ function main(): void {
         projectId: envExtractor.firebaseProjectId(),
         storageBucket: envExtractor.firebaseStorageBucket(),
     });
+
+    const _lastFm = new LastFm(envExtractor.lastFmSharedSecret());
 }
