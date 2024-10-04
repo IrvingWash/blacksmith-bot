@@ -1,11 +1,17 @@
 export type LastFmBoolean = "0" | "1";
 
+export interface LastFmGetTokenResponse {
+    token: string;
+}
+
+export interface LastFmSessionResponse {
+    session: LastFmSession;
+}
+
 export interface LastFmSession {
-    session: {
-        key: string;
-        name: string;
-        subscriber: unknown;
-    };
+    key: string;
+    name: string;
+    subscriber: unknown;
 }
 
 export interface LastFmRecentTracks {

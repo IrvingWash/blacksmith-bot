@@ -22,6 +22,7 @@ interface LastFmRequestsEnvironmentParams {
 const formatQueryParams = ["format", "json"] as const;
 
 const enum LastFmMethods {
+    AuthGetToken = "auth.getToken",
     AuthGetSession = "auth.getSession",
     UserGetResentTracks = "user.getRecentTracks",
     TrackScrobble = "track.scrobble",
@@ -41,24 +42,24 @@ export class LastFmRequestsEnvironment {
         this._callSigner = params.callSigner;
     }
 
-    private _authUrl: URL = new URL("http://www.last.fm/api/auth/");
-
-    public auth(cb: string): RequestMetaInfo {
-        const url = new URL(this._authUrl);
+    public authGetToken(): RequestMetaInfo {
+        const url = new URL(this._baseUrl);
 
         addQueryParams(url, {
-            // biome-ignore lint/style/useNamingConvention: External API
+            method: LastFmMethods.AuthGetToken,
+            // biome-ignore lint/style/useNamingConvention: <explanation>
             api_key: this._apiKey,
-            cb,
         });
 
+        this._appendCommonQueryParams(url);
+
         return {
-            method: HttpMethod.Get,
             url,
+            method: HttpMethod.Get,
         };
     }
 
-    public getSession(token: string): RequestMetaInfo {
+    public authGetSession(token: string): RequestMetaInfo {
         const url = new URL(this._baseUrl);
 
         addQueryParams(url, {
@@ -76,7 +77,7 @@ export class LastFmRequestsEnvironment {
         };
     }
 
-    public getRecentTracks(
+    public userGetRecentTracks(
         user: string,
         extended: LastFmBoolean = "0"
     ): RequestMetaInfo {
@@ -98,7 +99,7 @@ export class LastFmRequestsEnvironment {
         };
     }
 
-    public scrobble(params: LastFmScrobblePayload): RequestMetaInfo {
+    public trackScrobble(params: LastFmScrobblePayload): RequestMetaInfo {
         const url = new URL(this._baseUrl);
 
         addQueryParams(url, {
@@ -117,7 +118,7 @@ export class LastFmRequestsEnvironment {
         };
     }
 
-    public getAlbumInfo(params: LastFmGetAlbumInfoPayload): RequestMetaInfo {
+    public albumGetInfo(params: LastFmGetAlbumInfoPayload): RequestMetaInfo {
         const url = new URL(this._baseUrl);
 
         addQueryParams(url, {

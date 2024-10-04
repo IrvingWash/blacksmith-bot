@@ -6,6 +6,7 @@ import {
     TrackScrobblingResult,
 } from "../domain/objects";
 import { extractErrorMessage } from "../utils/error-message-extractor";
+import { LastFmAuthorizationProvider } from "./lastfm-authorization-provider";
 import { LastFmCallSigner } from "./lastfm-call-signer";
 import {
     convertAlbumInfoFromLastFm,
@@ -14,6 +15,7 @@ import {
     convertScrobbleTrackPayloadToLastFm,
     convertScrobblingResultFromLastFm,
 } from "./lastfm-converters";
+import { LastFmSession } from "./lastfm-objects";
 import { LastFmRequestsEnvironment } from "./lastfm-requests-environment";
 import { LastFmTransport } from "./lastfm-transport";
 
@@ -25,19 +27,37 @@ interface LastFmParams {
 }
 
 export class LastFm {
+    private readonly _apiKey: string;
+    private readonly _authProvider: LastFmAuthorizationProvider;
     private readonly _transport: LastFmTransport;
 
     public constructor(params: LastFmParams) {
+        this._apiKey = params.apiKey;
+
         const callSigner = new LastFmCallSigner(params.sharedSecret);
 
         const requestsEnvironment = new LastFmRequestsEnvironment({
-            apiKey: params.apiKey,
+            apiKey: this._apiKey,
             baseUrl: params.baseUrl,
             sessionKey: params.sessionKey,
             callSigner,
         });
 
+        this._authProvider = new LastFmAuthorizationProvider(
+            requestsEnvironment
+        );
+
         this._transport = new LastFmTransport(requestsEnvironment);
+    }
+
+    public async requestAuth(): Promise<string> {
+        const token = await this._authProvider.getToken();
+
+        return `https://www.last.fm/api/auth/?api_key=${this._apiKey}&token=${token}`;
+    }
+
+    public session(): Promise<LastFmSession> {
+        return this._authProvider.getSession();
     }
 
     public async recentTracks(username: string): Promise<RecentTrack[]> {
