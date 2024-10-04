@@ -6,16 +6,16 @@ import {
     TrackScrobblingResult,
 } from "../domain/objects";
 import { extractErrorMessage } from "../utils/error-message-extractor";
-import { LastFmCallSigner } from "./call-signer";
+import { LastFmCallSigner } from "./lastfm-call-signer";
 import {
     convertAlbumInfoFromLastFm,
     convertRecentTrackFromLastFm,
     convertRequestAlbumInfoPayloadToLastFm,
     convertScrobbleTrackPayloadToLastFm,
     convertScrobblingResultFromLastFm,
-} from "./converters";
-import { LastFmRequestsEnvironment } from "./requests-environment";
-import { LastFmTransport } from "./transport";
+} from "./lastfm-converters";
+import { LastFmRequestsEnvironment } from "./lastfm-requests-environment";
+import { LastFmTransport } from "./lastfm-transport";
 
 interface LastFmParams {
     baseUrl: string;

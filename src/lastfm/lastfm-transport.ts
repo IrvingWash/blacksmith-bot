@@ -5,8 +5,8 @@ import {
     LastFmRecentTracks,
     LastFmScrobblePayload,
     LastFmScrobbleResult,
-} from "./objects";
-import { LastFmRequestsEnvironment } from "./requests-environment";
+} from "./lastfm-objects";
+import { LastFmRequestsEnvironment } from "./lastfm-requests-environment";
 
 export class LastFmTransport {
     private readonly _requestsEnvironment: LastFmRequestsEnvironment;

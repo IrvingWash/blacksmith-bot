@@ -6,7 +6,7 @@ import {
     LastFmRecentTrack,
     LastFmScrobblePayload,
     LastFmScrobbleResult,
-} from "./objects";
+} from "./lastfm-objects";
 import {
     AlbumInfo,
     RecentTrack,

@@ -1,4 +1,4 @@
-import { RequestMetaInfo } from "./requests-environment";
+import { RequestMetaInfo } from "./lastfm-requests-environment";
 
 export async function lastFmFetch<T>(
     requestMetaInfo: RequestMetaInfo

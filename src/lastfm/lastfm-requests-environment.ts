@@ -1,11 +1,11 @@
-import { LastFmCallSigner } from "./call-signer";
+import { LastFmCallSigner } from "./lastfm-call-signer";
 import { HttpMethod } from "../utils/http-method";
 import { addQueryParams } from "../utils/query-params-adder";
 import {
     LastFmBoolean,
     LastFmGetAlbumInfoPayload,
     LastFmScrobblePayload,
-} from "./objects";
+} from "./lastfm-objects";
 
 export interface RequestMetaInfo {
     url: URL;
