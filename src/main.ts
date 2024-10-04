@@ -19,5 +19,10 @@ function main(): void {
         storageBucket: envExtractor.firebaseStorageBucket(),
     });
 
-    const _lastFm = new LastFm(envExtractor.lastFmSharedSecret());
+    const _lastFm = new LastFm({
+        baseUrl: "http://ws.audioscrobbler.com/2.0/",
+        apiKey: envExtractor.lastFmApiKey(),
+        sharedSecret: envExtractor.lastFmSharedSecret(),
+        sessionKey: "", // TODO
+    });
 }

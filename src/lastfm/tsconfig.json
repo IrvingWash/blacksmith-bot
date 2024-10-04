@@ -3,5 +3,10 @@
     "compilerOptions": {
         "composite": true
     },
+    "references": [
+        { "path": "../session-storage/tsconfig.json" },
+        { "path": "../utils/tsconfig.json" },
+        { "path": "../domain/tsconfig.json" }
+    ],
     "include": ["./**/*.ts"]
 }
