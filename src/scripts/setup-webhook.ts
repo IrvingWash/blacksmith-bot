@@ -1,6 +1,6 @@
 import { config } from "dotenv";
-import { Telegram } from "./telegram/telegram";
-import { EnvExtractor } from "./utils/env-extractor";
+import { Telegram } from "../telegram/telegram";
+import { EnvExtractor } from "../utils/env-extractor";
 
 config();
 
