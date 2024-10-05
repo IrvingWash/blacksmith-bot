@@ -29,7 +29,7 @@ export default async (req: Request): Promise<void> => {
 
         await scrobbleBot.sendMessage(
             update.message.chat.id,
-            extractErrorMessage(error)
+            `Something went wrong: ${extractErrorMessage(error)}`
         );
     }
 
