@@ -1,7 +1,7 @@
 import { config } from "dotenv";
 import { Telegram } from "../telegram/telegram";
 import { EnvExtractor } from "../utils/env-extractor";
-import { telegramBotCommandsConfig } from "../telegram/telegram-command-config";
+import { commandsConfig } from "../scrobbler-bot/commands-config";
 
 setup().then();
 
@@ -20,6 +20,6 @@ async function setup(): Promise<void> {
     );
 
     await telegram.setMyCommands({
-        commands: Object.values(telegramBotCommandsConfig),
+        commands: Object.values(commandsConfig),
     });
 }

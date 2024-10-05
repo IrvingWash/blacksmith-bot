@@ -7,5 +7,5 @@
         { "path": "../utils/tsconfig.json" },
         { "path": "../domain/tsconfig.json" }
     ],
-    "include": ["./**/*.ts"]
+    "include": ["./**/*.ts", "../scrobbler-bot/commands-config.ts"]
 }

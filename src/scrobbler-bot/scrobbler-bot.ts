@@ -11,7 +11,7 @@ import {
     TelegramBotCommand,
     TelegramUpdate,
 } from "../telegram/telegram-objects";
-import { telegramBotCommandsConfig } from "../telegram/telegram-command-config";
+import { commandsConfig } from "./commands-config";
 
 export class ScrobblerBot {
     private readonly _sessionStorage: ISessionStorage<UserCredentials>;
@@ -44,29 +44,27 @@ export class ScrobblerBot {
     }
 
     public parseUpdate(update: TelegramUpdate): Promise<boolean> {
-        if (
-            this._isWithCommand(telegramBotCommandsConfig.RequestAuth, update)
-        ) {
+        if (this._isWithCommand(commandsConfig.RequestAuth, update)) {
             return this._handleRequestAuthCommand(update);
         }
 
-        if (this._isWithCommand(telegramBotCommandsConfig.GetSession, update)) {
+        if (this._isWithCommand(commandsConfig.GetSession, update)) {
             return this._handleGetSessionCommand(update);
         }
 
-        if (this._isWithCommand(telegramBotCommandsConfig.List, update)) {
+        if (this._isWithCommand(commandsConfig.List, update)) {
             return this._handleListCommand(update);
         }
 
-        if (this._isWithCommand(telegramBotCommandsConfig.Scrobble, update)) {
+        if (this._isWithCommand(commandsConfig.Scrobble, update)) {
             return this._handleScrobbleCommand(update);
         }
 
-        if (this._isWithCommand(telegramBotCommandsConfig.Logout, update)) {
+        if (this._isWithCommand(commandsConfig.Logout, update)) {
             return this._handleLogoutCommand(update);
         }
 
-        if (this._isWithCommand(telegramBotCommandsConfig.Help, update)) {
+        if (this._isWithCommand(commandsConfig.Help, update)) {
             return this._handleHelpCommand(update);
         }
 
@@ -114,7 +112,7 @@ export class ScrobblerBot {
         update: TelegramUpdate
     ): Promise<boolean> {
         const payload = update.message.text.split(
-            `/${telegramBotCommandsConfig.Scrobble.command} `
+            `/${commandsConfig.Scrobble.command} `
         )[1];
 
         if (payload === undefined) {

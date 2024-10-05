@@ -1,4 +1,4 @@
-export const telegramBotCommandsConfig = {
+export const commandsConfig = {
     // biome-ignore lint/style/useNamingConvention: <explanation>
     RequestAuth: {
         command: "request_auth",
