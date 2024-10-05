@@ -3,6 +3,7 @@ import { ISessionStorage } from "../session-storage/isession-storage";
 import { Telegram } from "../telegram/telegram";
 import { LastFm } from "../lastfm/lastfm";
 import { TelegramUpdate } from "../telegram/telegram-objects";
+import { telegramBotCommandsConfig } from "../telegram/telegram-command-config";
 
 export class ScrobblerBot {
     private readonly _sessionStorage: ISessionStorage<UserCredentials>;
@@ -28,10 +29,31 @@ export class ScrobblerBot {
     }
 
     public async parseUpdate(update: TelegramUpdate): Promise<boolean> {
-        if (update.message.text.startsWith("/request_auth")) {
+        if (
+            update.message.text.startsWith(
+                `/${telegramBotCommandsConfig.RequestAuth.command}`
+            )
+        ) {
             const url = await this._requestAccess(update.message.from.username);
 
             return this._sendMessage(update.message.chat.id, url);
+        }
+
+        if (
+            update.message.text.startsWith(
+                `/${telegramBotCommandsConfig.GetSession.command}`
+            )
+        ) {
+            try {
+                await this._getSession(update.message.from.username);
+            } catch {
+                return this._sendMessage(
+                    update.message.chat.id,
+                    "Failed to authorize"
+                );
+            }
+
+            return this._sendMessage(update.message.chat.id, "Authorized");
         }
 
         return this._sendMessage(
