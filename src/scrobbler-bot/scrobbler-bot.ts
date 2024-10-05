@@ -28,13 +28,16 @@ export class ScrobblerBot {
     }
 
     public async parseUpdate(update: TelegramUpdate): Promise<boolean> {
-        if (update.message.text.startsWith("/request_access")) {
+        if (update.message.text.startsWith("/request_auth")) {
             const url = await this._requestAccess(update.message.from.username);
 
             return this._sendMessage(update.message.chat.id, url);
         }
 
-        return true;
+        return this._sendMessage(
+            update.message.chat.id,
+            `Unknown command: ${update.message.text}`
+        );
     }
 
     private _sendMessage(chatId: string, text: string): Promise<boolean> {
