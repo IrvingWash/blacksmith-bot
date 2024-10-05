@@ -1,5 +1,5 @@
 import { env } from "node:process";
-import { ensureExists } from "./ensure-exists";
+import { ensureExists } from "./existence-ensurer";
 
 const enum EnvVars {
     FirebaseApiKey = "FirebaseApiKey",

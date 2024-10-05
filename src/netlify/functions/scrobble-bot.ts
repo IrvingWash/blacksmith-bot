@@ -8,14 +8,13 @@ import { UserCredentials } from "../../domain/objects";
 import { TelegramUpdate } from "../../telegram/telegram-objects";
 import { extractErrorMessage } from "../../utils/error-message-extractor";
 
-// biome-ignore lint/style/noDefaultExport: <explanation>
+// biome-ignore lint/style/noDefaultExport: External API
 export default async (req: Request): Promise<void> => {
     config();
 
     const update = (await req.json()) as TelegramUpdate;
 
-    // biome-ignore lint/suspicious/noConsoleLog: <explanation>
-    // biome-ignore lint/suspicious/noConsole: <explanation>
+    // biome-ignore lint/suspicious/noConsole: Logging
     console.log(`Received update ${JSON.stringify(update)}`);
 
     const scrobbleBot = createScrobbleBot();
@@ -23,8 +22,7 @@ export default async (req: Request): Promise<void> => {
     try {
         await scrobbleBot.parseUpdate(update);
     } catch (error) {
-        // biome-ignore lint/suspicious/noConsoleLog: <explanation>
-        // biome-ignore lint/suspicious/noConsole: <explanation>
+        // biome-ignore lint/suspicious/noConsole: Logging
         console.log(error);
 
         await scrobbleBot.sendMessage(
@@ -33,8 +31,7 @@ export default async (req: Request): Promise<void> => {
         );
     }
 
-    // biome-ignore lint/suspicious/noConsoleLog: <explanation>
-    // biome-ignore lint/suspicious/noConsole: <explanation>
+    // biome-ignore lint/suspicious/noConsole: Logging
     console.log(`Finished with update with id ${update.update_id}`);
 
     return;

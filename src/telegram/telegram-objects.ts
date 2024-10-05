@@ -5,12 +5,12 @@ interface TelegramSuccessResponse<T> {
 
 interface TelegramFailResponse {
     ok: false;
-    // biome-ignore lint/style/useNamingConvention: <explanation>
+    // biome-ignore lint/style/useNamingConvention: External API
     error_code: number;
     description: string;
 }
 
-// biome-ignore lint/complexity/noBannedTypes: <explanation>
+// biome-ignore lint/complexity/noBannedTypes: This type should not be banned
 export type TelegramResponse<T = {}> =
     | TelegramSuccessResponse<T>
     | TelegramFailResponse;
@@ -20,19 +20,19 @@ export interface TelegramWebhookInfo {
 }
 
 export interface TelegramSendMessagePayload {
-    // biome-ignore lint/style/useNamingConvention: <explanation>
+    // biome-ignore lint/style/useNamingConvention: External API
     chat_id: string;
     text: string;
 }
 
 export interface TelegramUpdate {
-    // biome-ignore lint/style/useNamingConvention: <explanation>
+    // biome-ignore lint/style/useNamingConvention: External API
     update_id: string;
     message: TelegramMessage;
 }
 
 export interface TelegramMessage {
-    // biome-ignore lint/style/useNamingConvention: <explanation>
+    // biome-ignore lint/style/useNamingConvention: External API
     message_id: string;
     from: TelegramUser;
     chat: TelegramChat;

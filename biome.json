@@ -45,7 +45,8 @@
                 "noStaticOnlyClass": "off"
             },
             "suspicious": {
-                "noConstEnum": "off"
+                "noConstEnum": "off",
+                "noConsoleLog": "off"
             },
             "style": {
                 "useImportType": "off",

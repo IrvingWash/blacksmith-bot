@@ -47,7 +47,7 @@ export class LastFmRequestsEnvironment {
 
         addQueryParams(url, {
             method: LastFmMethods.AuthGetToken,
-            // biome-ignore lint/style/useNamingConvention: <explanation>
+            // biome-ignore lint/style/useNamingConvention: External API
             api_key: this._apiKey,
         });
 

@@ -1,7 +1,7 @@
 import { RequestMetaInfo } from "../utils/request-meta-info";
 import { TelegramResponse } from "./telegram-objects";
 
-// biome-ignore lint/complexity/noBannedTypes: <explanation>
+// biome-ignore lint/complexity/noBannedTypes: This type should not be banned
 export async function telegramFetch<R, B = {}>(
     requestMetaInfo: RequestMetaInfo,
     body?: B

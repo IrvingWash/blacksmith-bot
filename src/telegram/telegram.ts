@@ -38,7 +38,7 @@ export class Telegram {
 
     public async sendMessage(message: MessagePayload): Promise<boolean> {
         const response = await this._transport.sendMessage({
-            // biome-ignore lint/style/useNamingConvention: <explanation>
+            // biome-ignore lint/style/useNamingConvention: External API
             chat_id: message.chatId,
             text: message.text,
         });
