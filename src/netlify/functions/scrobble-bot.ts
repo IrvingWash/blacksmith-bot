@@ -14,6 +14,10 @@ export default async (req: Request): Promise<void> => {
 
     const update = (await req.json()) as TelegramUpdate;
 
+    if (update.edited_message !== undefined) {
+        return;
+    }
+
     // biome-ignore lint/suspicious/noConsole: Logging
     console.log(`Received update ${JSON.stringify(update)}`);
 

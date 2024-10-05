@@ -25,11 +25,25 @@ export interface TelegramSendMessagePayload {
     text: string;
 }
 
-export interface TelegramUpdate {
+interface TelegramMessageUpdate {
     // biome-ignore lint/style/useNamingConvention: External API
     update_id: string;
     message: TelegramMessage;
+    // biome-ignore lint/style/useNamingConvention: External API
+    edited_message: never;
 }
+
+interface TelegramEditedMessageUpdate {
+    // biome-ignore lint/style/useNamingConvention: External API
+    update_id: string;
+    // biome-ignore lint/style/useNamingConvention: External API
+    edited_message: unknown;
+    message: never;
+}
+
+export type TelegramUpdate =
+    | TelegramMessageUpdate
+    | TelegramEditedMessageUpdate;
 
 export interface TelegramMessage {
     // biome-ignore lint/style/useNamingConvention: External API
