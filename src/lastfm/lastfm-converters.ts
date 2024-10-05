@@ -65,7 +65,7 @@ export function convertScrobbleTrackPayloadToLastFm(
 ): LastFmScrobblePayload {
     return {
         artist: params.artistName,
-        timestamp: params.timestamp / 1000,
+        timestamp: params.timestamp / 1000 + (params.trackNumber ?? 0),
         track: params.trackName,
         album: params.albumTitle,
         mbid: params.mbid,
