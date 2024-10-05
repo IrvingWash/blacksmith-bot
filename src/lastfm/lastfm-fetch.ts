@@ -7,5 +7,9 @@ export async function lastFmFetch<T>(
         method: requestMetaInfo.method,
     });
 
+    // biome-ignore lint/suspicious/noConsoleLog: <explanation>
+    // biome-ignore lint/suspicious/noConsole: <explanation>
+    console.log(await response.text());
+
     return response.json() as T;
 }
