@@ -68,6 +68,10 @@ export class ScrobblerBot {
             return this._handleHelpCommand(update);
         }
 
+        if (update.message.text === "/start") {
+            return this._handleHelpCommand(update);
+        }
+
         return this.sendMessage(
             update.message.chat.id,
             `Unknown command: ${update.message.text}`
