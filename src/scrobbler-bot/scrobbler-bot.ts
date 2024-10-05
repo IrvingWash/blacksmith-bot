@@ -56,6 +56,21 @@ export class ScrobblerBot {
             return this._sendMessage(update.message.chat.id, "Authorized");
         }
 
+        if (
+            update.message.text.startsWith(
+                telegramBotCommandsConfig.List.command
+            )
+        ) {
+            const recentTracks = await this._listRecentTracks(
+                update.message.from.username
+            );
+
+            this._sendMessage(
+                update.message.chat.id,
+                JSON.stringify(recentTracks)
+            );
+        }
+
         return this._sendMessage(
             update.message.chat.id,
             `Unknown command: ${update.message.text}`

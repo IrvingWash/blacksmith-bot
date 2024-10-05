@@ -1,6 +1,7 @@
 import { config } from "dotenv";
 import { Telegram } from "../telegram/telegram";
 import { EnvExtractor } from "../utils/env-extractor";
+import { telegramBotCommandsConfig } from "../telegram/telegram-command-config";
 
 setup().then();
 
@@ -19,15 +20,6 @@ async function setup(): Promise<void> {
     );
 
     await telegram.setMyCommands({
-        commands: [
-            {
-                command: "request_auth",
-                description: "Request authorization from lastfm",
-            },
-            {
-                command: "get_session",
-                description: "Get lastfm session",
-            },
-        ],
+        commands: Object.values(telegramBotCommandsConfig),
     });
 }

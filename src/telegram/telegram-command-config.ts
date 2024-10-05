@@ -9,4 +9,9 @@ export const telegramBotCommandsConfig = {
         command: "get_session",
         description: "Get lastfm session",
     },
+    // biome-ignore lint/style/useNamingConvention: <explanation>
+    List: {
+        command: "list",
+        description: "List recent tracks",
+    },
 };
