@@ -10,15 +10,37 @@ import { extractErrorMessage } from "../../utils/error-message-extractor";
 
 // biome-ignore lint/style/noDefaultExport: <explanation>
 export default async (req: Request): Promise<void> => {
-    // Setup
     config();
 
     const update = (await req.json()) as TelegramUpdate;
 
     // biome-ignore lint/suspicious/noConsoleLog: <explanation>
     // biome-ignore lint/suspicious/noConsole: <explanation>
-    console.log(`Received update ${update}`);
+    console.log(`Received update ${JSON.stringify(update)}`);
 
+    const scrobbleBot = createScrobbleBot();
+
+    try {
+        await scrobbleBot.parseUpdate(update);
+    } catch (error) {
+        // biome-ignore lint/suspicious/noConsoleLog: <explanation>
+        // biome-ignore lint/suspicious/noConsole: <explanation>
+        console.log(error);
+
+        await scrobbleBot.sendMessage(
+            update.message.chat.id,
+            extractErrorMessage(error)
+        );
+    }
+
+    // biome-ignore lint/suspicious/noConsoleLog: <explanation>
+    // biome-ignore lint/suspicious/noConsole: <explanation>
+    console.log(`Finished with update with id ${update.update_id}`);
+
+    return;
+};
+
+function createScrobbleBot(): ScrobblerBot {
     const envExtractor = new EnvExtractor();
 
     const sessionStorage = new Firebase<UserCredentials>({
@@ -41,24 +63,5 @@ export default async (req: Request): Promise<void> => {
         baseUrl: "http://ws.audioscrobbler.com/2.0/",
     });
 
-    const scrobbleBot = new ScrobblerBot(sessionStorage, telegram, lastFm);
-
-    try {
-        await scrobbleBot.parseUpdate(update);
-    } catch (error) {
-        // biome-ignore lint/suspicious/noConsoleLog: <explanation>
-        // biome-ignore lint/suspicious/noConsole: <explanation>
-        console.log(error);
-
-        await scrobbleBot.sendMessage(
-            update.message.chat.id,
-            extractErrorMessage(error)
-        );
-    }
-
-    // biome-ignore lint/suspicious/noConsoleLog: <explanation>
-    // biome-ignore lint/suspicious/noConsole: <explanation>
-    console.log(`Finished with update with id ${update.update_id}`);
-
-    return;
-};
+    return new ScrobblerBot(sessionStorage, telegram, lastFm);
+}

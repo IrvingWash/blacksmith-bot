@@ -18,11 +18,16 @@ export const telegramBotCommandsConfig = {
     Scrobble: {
         command: "scrobble",
         description:
-            'Scrobble an album: `/scrobble "Artist Name"-___-"Album Name"`',
+            "Scrobble an album: `/scrobble Artist Name-___-Album Name`",
     },
     // biome-ignore lint/style/useNamingConvention: <explanation>
     Logout: {
         command: "logout",
         description: "Make the bot forget about your lastfm token",
+    },
+    // biome-ignore lint/style/useNamingConvention: <explanation>
+    Help: {
+        command: "help",
+        description: "Learn how to use this bot",
     },
 };

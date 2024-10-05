@@ -7,7 +7,10 @@ import {
 import { ISessionStorage } from "../session-storage/isession-storage";
 import { Telegram } from "../telegram/telegram";
 import { LastFm } from "../lastfm/lastfm";
-import { TelegramUpdate } from "../telegram/telegram-objects";
+import {
+    TelegramBotCommand,
+    TelegramUpdate,
+} from "../telegram/telegram-objects";
 import { telegramBotCommandsConfig } from "../telegram/telegram-command-config";
 
 export class ScrobblerBot {
@@ -33,109 +36,137 @@ export class ScrobblerBot {
         return this._telegram.setWebhook(url);
     }
 
-    public async parseUpdate(update: TelegramUpdate): Promise<boolean> {
-        if (
-            update.message.text.startsWith(
-                `/${telegramBotCommandsConfig.RequestAuth.command}`
-            )
-        ) {
-            const url = await this._requestAccess(update.message.from.username);
+    private _isWithCommand(
+        botCommand: TelegramBotCommand,
+        update: TelegramUpdate
+    ): boolean {
+        return update.message.text.startsWith(`/${botCommand.command}`);
+    }
 
-            return this.sendMessage(update.message.chat.id, url);
+    public parseUpdate(update: TelegramUpdate): Promise<boolean> {
+        if (
+            this._isWithCommand(telegramBotCommandsConfig.RequestAuth, update)
+        ) {
+            return this._handleRequestAuthCommand(update);
         }
 
-        if (
-            update.message.text.startsWith(
-                `/${telegramBotCommandsConfig.GetSession.command}`
-            )
-        ) {
-            try {
-                await this._getSession(update.message.from.username);
-            } catch {
-                return this.sendMessage(
-                    update.message.chat.id,
-                    "Failed to authorize"
-                );
-            }
-
-            return this.sendMessage(update.message.chat.id, "Authorized");
+        if (this._isWithCommand(telegramBotCommandsConfig.GetSession, update)) {
+            return this._handleGetSessionCommand(update);
         }
 
-        if (
-            update.message.text.startsWith(
-                `/${telegramBotCommandsConfig.List.command}`
-            )
-        ) {
-            const recentTracks = await this._listRecentTracks(
-                update.message.from.username
-            );
-
-            return this.sendMessage(
-                update.message.chat.id,
-                this._printRecentTracks(recentTracks)
-            );
+        if (this._isWithCommand(telegramBotCommandsConfig.List, update)) {
+            return this._handleListCommand(update);
         }
 
-        if (
-            update.message.text.startsWith(
-                `/${telegramBotCommandsConfig.Scrobble.command}`
-            )
-        ) {
-            const payload = update.message.text.split(
-                `/${telegramBotCommandsConfig.Scrobble.command} `
-            )[1];
-
-            if (payload === undefined) {
-                return this.sendMessage(
-                    update.message.chat.id,
-                    `Wrong payload: ${update.message.text}`
-                );
-            }
-
-            const [artist, album] = payload.split("-___-");
-
-            if (artist === undefined || album === undefined) {
-                return this.sendMessage(
-                    update.message.chat.id,
-                    `Wrong payload: ${update.message.text}`
-                );
-            }
-
-            const result = await this._scrobbleAlbum(
-                update.message.from.username,
-                artist,
-                album
-            );
-
-            if (result.accepted) {
-                return this.sendMessage(
-                    update.message.chat.id,
-                    "Scrobbled (maybe)"
-                );
-            }
-
-            return this.sendMessage(
-                update.message.chat.id,
-                `Failed to scrobble: ${result.ignoringMessage}`
-            );
+        if (this._isWithCommand(telegramBotCommandsConfig.Scrobble, update)) {
+            return this._handleScrobbleCommand(update);
         }
 
-        if (
-            update.message.text.startsWith(
-                `/${telegramBotCommandsConfig.Logout.command}`
-            )
-        ) {
-            await this._sessionStorage.clear(
-                "session",
-                update.message.from.username
-            );
+        if (this._isWithCommand(telegramBotCommandsConfig.Logout, update)) {
+            return this._handleLogoutCommand(update);
+        }
 
-            return this.sendMessage(update.message.chat.id, "Logged out");
+        if (this._isWithCommand(telegramBotCommandsConfig.Help, update)) {
+            return this._handleHelpCommand(update);
         }
 
         return this.sendMessage(
             update.message.chat.id,
             `Unknown command: ${update.message.text}`
+        );
+    }
+
+    private async _handleRequestAuthCommand(
+        update: TelegramUpdate
+    ): Promise<boolean> {
+        const url = await this._requestAccess(update.message.from.username);
+
+        return this.sendMessage(update.message.chat.id, url);
+    }
+
+    private async _handleGetSessionCommand(
+        update: TelegramUpdate
+    ): Promise<boolean> {
+        try {
+            await this._getSession(update.message.from.username);
+        } catch {
+            return this.sendMessage(
+                update.message.chat.id,
+                "Failed to authorize"
+            );
+        }
+
+        return this.sendMessage(update.message.chat.id, "Authorized");
+    }
+
+    private async _handleListCommand(update: TelegramUpdate): Promise<boolean> {
+        const recentTracks = await this._listRecentTracks(
+            update.message.from.username
+        );
+
+        return this.sendMessage(
+            update.message.chat.id,
+            this._printRecentTracks(recentTracks)
+        );
+    }
+
+    private async _handleScrobbleCommand(
+        update: TelegramUpdate
+    ): Promise<boolean> {
+        const payload = update.message.text.split(
+            `/${telegramBotCommandsConfig.Scrobble.command} `
+        )[1];
+
+        if (payload === undefined) {
+            return this.sendMessage(
+                update.message.chat.id,
+                `Wrong payload: ${update.message.text}`
+            );
+        }
+
+        const [artist, album] = payload.split("-___-");
+
+        if (artist === undefined || album === undefined) {
+            return this.sendMessage(
+                update.message.chat.id,
+                `Wrong payload: ${update.message.text}`
+            );
+        }
+
+        const result = await this._scrobbleAlbum(
+            update.message.from.username,
+            artist,
+            album
+        );
+
+        if (result.accepted) {
+            return this.sendMessage(
+                update.message.chat.id,
+                "Scrobbled (maybe)"
+            );
+        }
+
+        return this.sendMessage(
+            update.message.chat.id,
+            `Failed to scrobble: ${result.ignoringMessage}`
+        );
+    }
+
+    private async _handleLogoutCommand(
+        update: TelegramUpdate
+    ): Promise<boolean> {
+        await this._sessionStorage.clear(
+            "session",
+            update.message.from.username
+        );
+
+        return this.sendMessage(update.message.chat.id, "Logged out");
+    }
+
+    private _handleHelpCommand(update: TelegramUpdate): Promise<boolean> {
+        return this.sendMessage(
+            update.message.chat.id,
+            "First call `/request_auth` and go to the generated lastfm auth url to grant access.\nThen use `/get_session` to let the bot receive a permanent token."
         );
     }
 
