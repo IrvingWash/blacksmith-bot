@@ -1,0 +1,11 @@
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "composite": true
+    },
+    "references": [
+        { "path": "../utils/tsconfig.json" },
+        { "path": "../domain/tsconfig.json" }
+    ],
+    "include": ["./**/*.ts"]
+}

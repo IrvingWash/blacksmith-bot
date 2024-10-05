@@ -47,3 +47,7 @@ export interface AlbumInfo {
     tracks: Track[];
     lastFmUrl: string;
 }
+
+export interface WebhookInfo {
+    url: string;
+}

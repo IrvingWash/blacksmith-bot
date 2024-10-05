@@ -10,6 +10,7 @@ const enum EnvVars {
     FirebaseAppId = "FirebaseAppId",
     LastFmApiKey = "LastFmApiKey",
     LastFmSharedSecret = "LastFmSharedSecret",
+    TelegramBotToken = "TelegramBotToken",
 }
 
 export class EnvExtractor {
@@ -43,6 +44,10 @@ export class EnvExtractor {
 
     public lastFmSharedSecret(): string {
         return this._envVariable(EnvVars.LastFmSharedSecret);
+    }
+
+    public telegramBotToken(): string {
+        return this._envVariable(EnvVars.TelegramBotToken);
     }
 
     private _envVariable(name: EnvVars): string {

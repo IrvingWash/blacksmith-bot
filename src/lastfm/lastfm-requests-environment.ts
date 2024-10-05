@@ -6,11 +6,7 @@ import {
     LastFmGetAlbumInfoPayload,
     LastFmScrobblePayload,
 } from "./lastfm-objects";
-
-export interface RequestMetaInfo {
-    url: URL;
-    method: HttpMethod;
-}
+import { RequestMetaInfo } from "../utils/request-meta-info";
 
 interface LastFmRequestsEnvironmentParams {
     baseUrl: string;
