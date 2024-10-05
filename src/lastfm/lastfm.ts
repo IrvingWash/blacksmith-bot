@@ -1,9 +1,11 @@
 import {
     AlbumInfo,
+    GrantResult,
     RecentTrack,
     RequestAlbumInfoPayload,
     ScrobbleTrackPayload,
     TrackScrobblingResult,
+    UserCredentials,
 } from "../domain/objects";
 import { extractErrorMessage } from "../utils/error-message-extractor";
 import { LastFmAuthorizationProvider } from "./lastfm-authorization-provider";
@@ -15,7 +17,6 @@ import {
     convertScrobbleTrackPayloadToLastFm,
     convertScrobblingResultFromLastFm,
 } from "./lastfm-converters";
-import { LastFmSession } from "./lastfm-objects";
 import { LastFmRequestsEnvironment } from "./lastfm-requests-environment";
 import { LastFmTransport } from "./lastfm-transport";
 
@@ -28,6 +29,7 @@ interface LastFmParams {
 
 export class LastFm {
     private readonly _apiKey: string;
+    private readonly _requestsEnvironment: LastFmRequestsEnvironment;
     private readonly _authProvider: LastFmAuthorizationProvider;
     private readonly _transport: LastFmTransport;
 
@@ -36,7 +38,7 @@ export class LastFm {
 
         const callSigner = new LastFmCallSigner(params.sharedSecret);
 
-        const requestsEnvironment = new LastFmRequestsEnvironment({
+        this._requestsEnvironment = new LastFmRequestsEnvironment({
             apiKey: this._apiKey,
             baseUrl: params.baseUrl,
             sessionKey: params.sessionKey,
@@ -44,20 +46,32 @@ export class LastFm {
         });
 
         this._authProvider = new LastFmAuthorizationProvider(
-            requestsEnvironment
+            this._requestsEnvironment
         );
 
-        this._transport = new LastFmTransport(requestsEnvironment);
+        this._transport = new LastFmTransport(this._requestsEnvironment);
     }
 
-    public async requestAuth(): Promise<string> {
+    public setSessionKey(value: string): void {
+        this._requestsEnvironment.setSessionKey(value);
+    }
+
+    public async requestAccess(): Promise<GrantResult> {
         const token = await this._authProvider.getToken();
 
-        return `https://www.last.fm/api/auth/?api_key=${this._apiKey}&token=${token}`;
+        return {
+            url: `https://www.last.fm/api/auth/?api_key=${this._apiKey}&token=${token}`,
+            grantToken: token,
+        };
     }
 
-    public session(): Promise<LastFmSession> {
-        return this._authProvider.getSession();
+    public async session(token: string): Promise<UserCredentials> {
+        const lastFmSession = await this._authProvider.getSession(token);
+
+        return {
+            token: lastFmSession.key,
+            username: lastFmSession.name,
+        };
     }
 
     public async recentTracks(username: string): Promise<RecentTrack[]> {

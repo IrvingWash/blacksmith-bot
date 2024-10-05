@@ -8,11 +8,9 @@ import {
 
 export class LastFmAuthorizationProvider {
     private readonly _requestsEnvironment: LastFmRequestsEnvironment;
-    private _token: string | null;
 
     public constructor(requestsEnvironment: LastFmRequestsEnvironment) {
         this._requestsEnvironment = requestsEnvironment;
-        this._token = null;
     }
 
     public async getToken(): Promise<string> {
@@ -20,18 +18,12 @@ export class LastFmAuthorizationProvider {
             this._requestsEnvironment.authGetToken()
         );
 
-        this._token = tokenResponse.token;
-
         return tokenResponse.token;
     }
 
-    public async getSession(): Promise<LastFmSession> {
-        if (this._token === null) {
-            throw new Error("Unauthorized");
-        }
-
+    public async getSession(token: string): Promise<LastFmSession> {
         const session = await lastFmFetch<LastFmSessionResponse>(
-            this._requestsEnvironment.authGetSession(this._token)
+            this._requestsEnvironment.authGetSession(token)
         );
 
         return session.session;

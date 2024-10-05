@@ -1,0 +1,14 @@
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "composite": true
+    },
+    "references": [
+        { "path": "../session-storage/tsconfig.json" },
+        { "path": "../utils/tsconfig.json" },
+        { "path": "../domain/tsconfig.json" },
+        { "path": "../telegram/tsconfig.json" },
+        { "path": "../lastfm/tsconfig.json" }
+    ],
+    "include": ["./**/*.ts"]
+}

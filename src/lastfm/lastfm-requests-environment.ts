@@ -11,8 +11,8 @@ import { RequestMetaInfo } from "../utils/request-meta-info";
 interface LastFmRequestsEnvironmentParams {
     baseUrl: string;
     apiKey: string;
-    sessionKey: string;
     callSigner: LastFmCallSigner;
+    sessionKey?: string;
 }
 
 const formatQueryParams = ["format", "json"] as const;
@@ -28,14 +28,18 @@ const enum LastFmMethods {
 export class LastFmRequestsEnvironment {
     private _baseUrl: string;
     private _apiKey: string;
-    private _sessionKey: string;
     private _callSigner: LastFmCallSigner;
+    private _sessionKey?: string;
 
     public constructor(params: LastFmRequestsEnvironmentParams) {
         this._baseUrl = params.baseUrl;
         this._apiKey = params.apiKey;
         this._sessionKey = params.sessionKey;
         this._callSigner = params.callSigner;
+    }
+
+    public setSessionKey(value: string): void {
+        this._sessionKey = value;
     }
 
     public authGetToken(): RequestMetaInfo {

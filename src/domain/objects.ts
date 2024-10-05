@@ -15,9 +15,14 @@ export interface RecentTrack extends TrackBase {
     lastFmImageUrl: string | undefined;
 }
 
+export interface GrantResult {
+    url: string;
+    grantToken: string;
+}
+
 export interface UserCredentials {
-    name: string;
-    key: string;
+    username: string;
+    token: string;
 }
 
 export interface ScrobbleTrackPayload {
