@@ -41,7 +41,7 @@ export class ScrobblerBot {
         ) {
             const url = await this._requestAccess(update.message.from.username);
 
-            return this._sendMessage(update.message.chat.id, url);
+            return this.sendMessage(update.message.chat.id, url);
         }
 
         if (
@@ -52,13 +52,13 @@ export class ScrobblerBot {
             try {
                 await this._getSession(update.message.from.username);
             } catch {
-                return this._sendMessage(
+                return this.sendMessage(
                     update.message.chat.id,
                     "Failed to authorize"
                 );
             }
 
-            return this._sendMessage(update.message.chat.id, "Authorized");
+            return this.sendMessage(update.message.chat.id, "Authorized");
         }
 
         if (
@@ -70,7 +70,7 @@ export class ScrobblerBot {
                 update.message.from.username
             );
 
-            return this._sendMessage(
+            return this.sendMessage(
                 update.message.chat.id,
                 this._printRecentTracks(recentTracks)
             );
@@ -86,7 +86,7 @@ export class ScrobblerBot {
             )[1];
 
             if (payload === undefined) {
-                return this._sendMessage(
+                return this.sendMessage(
                     update.message.chat.id,
                     `Wrong payload: ${update.message.text}`
                 );
@@ -95,7 +95,7 @@ export class ScrobblerBot {
             const [artist, album] = payload.split("-___-");
 
             if (artist === undefined || album === undefined) {
-                return this._sendMessage(
+                return this.sendMessage(
                     update.message.chat.id,
                     `Wrong payload: ${update.message.text}`
                 );
@@ -108,13 +108,13 @@ export class ScrobblerBot {
             );
 
             if (result.accepted) {
-                return this._sendMessage(
+                return this.sendMessage(
                     update.message.chat.id,
                     "Scrobbled (maybe)"
                 );
             }
 
-            return this._sendMessage(
+            return this.sendMessage(
                 update.message.chat.id,
                 `Failed to scrobble: ${result.ignoringMessage}`
             );
@@ -130,16 +130,16 @@ export class ScrobblerBot {
                 update.message.from.username
             );
 
-            return this._sendMessage(update.message.chat.id, "Logged out");
+            return this.sendMessage(update.message.chat.id, "Logged out");
         }
 
-        return this._sendMessage(
+        return this.sendMessage(
             update.message.chat.id,
             `Unknown command: ${update.message.text}`
         );
     }
 
-    private _sendMessage(chatId: string, text: string): Promise<boolean> {
+    public sendMessage(chatId: string, text: string): Promise<boolean> {
         return this._telegram.sendMessage({
             chatId,
             text,
