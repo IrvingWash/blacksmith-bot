@@ -38,5 +38,13 @@ export default async (req: Request): Promise<void> => {
 
     const update = (await req.json()) as TelegramUpdate;
 
-    await scrobbleBot.parseUpdate(update);
+    try {
+        await scrobbleBot.parseUpdate(update);
+    } catch (e) {
+        // biome-ignore lint/suspicious/noConsoleLog: <explanation>
+        // biome-ignore lint/suspicious/noConsole: <explanation>
+        console.log(e);
+    }
+
+    return;
 };
