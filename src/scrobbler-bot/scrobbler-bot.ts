@@ -65,10 +65,16 @@ export class ScrobblerBot {
                 update.message.from.username
             );
 
-            this._sendMessage(
-                update.message.chat.id,
-                JSON.stringify(recentTracks)
+            const promises = await Promise.all(
+                recentTracks.map((recentTrack) =>
+                    this._sendMessage(
+                        update.message.chat.id,
+                        JSON.stringify(recentTrack)
+                    )
+                )
             );
+
+            return !promises.some((promise) => promise === false);
         }
 
         return this._sendMessage(

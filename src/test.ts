@@ -38,8 +38,8 @@ async function test(): Promise<void> {
 
     await scrobbleBot.parseUpdate({
         message: {
-            chat: { id: "1" },
-            from: { id: 1, username: "IrvingWash" },
+            chat: { id: "296396609" },
+            from: { id: 296396609, username: "IrvingWash" },
             message_id: "1",
             text: "/list",
         },
