@@ -14,4 +14,10 @@ export const telegramBotCommandsConfig = {
         command: "list",
         description: "List recent tracks",
     },
+    // biome-ignore lint/style/useNamingConvention: <explanation>
+    Scrobble: {
+        command: "scrobble",
+        description:
+            'Scrobble an album: `/scrobble "Artist Name"-___-"Album Name"`',
+    },
 };

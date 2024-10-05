@@ -1,4 +1,9 @@
-import { RecentTrack, UserCredentials, WebhookInfo } from "../domain/objects";
+import {
+    RecentTrack,
+    TrackScrobblingResult,
+    UserCredentials,
+    WebhookInfo,
+} from "../domain/objects";
 import { ISessionStorage } from "../session-storage/isession-storage";
 import { Telegram } from "../telegram/telegram";
 import { LastFm } from "../lastfm/lastfm";
@@ -65,16 +70,54 @@ export class ScrobblerBot {
                 update.message.from.username
             );
 
-            const promises = await Promise.all(
-                recentTracks.map((recentTrack) =>
-                    this._sendMessage(
-                        update.message.chat.id,
-                        JSON.stringify(recentTrack)
-                    )
-                )
+            return this._sendMessage(
+                update.message.chat.id,
+                this._printRecentTracks(recentTracks)
+            );
+        }
+
+        if (
+            update.message.text.startsWith(
+                `/${telegramBotCommandsConfig.Scrobble.command}`
+            )
+        ) {
+            const payload = update.message.text.split(
+                `/${telegramBotCommandsConfig.Scrobble.command} `
+            )[1];
+
+            if (payload === undefined) {
+                return this._sendMessage(
+                    update.message.chat.id,
+                    `Wrong payload: ${update.message.text}`
+                );
+            }
+
+            const [artist, album] = payload.split("-___-");
+
+            if (artist === undefined || album === undefined) {
+                return this._sendMessage(
+                    update.message.chat.id,
+                    `Wrong payload: ${update.message.text}`
+                );
+            }
+
+            const result = await this._scrobbleAlbum(
+                update.message.from.username,
+                artist,
+                album
             );
 
-            return !promises.some((promise) => promise === false);
+            if (result.accepted) {
+                return this._sendMessage(
+                    update.message.chat.id,
+                    "Scrobbled (maybe)"
+                );
+            }
+
+            return this._sendMessage(
+                update.message.chat.id,
+                `Failed to scrobble: ${result.ignoringMessage}`
+            );
         }
 
         return this._sendMessage(
@@ -126,6 +169,30 @@ export class ScrobblerBot {
         }
 
         return this._lastFm.recentTracks(credentials.username);
+    }
+
+    private async _scrobbleAlbum(
+        telegramUsername: string,
+        artist: string,
+        album: string
+    ): Promise<TrackScrobblingResult> {
+        const credentials = await this._isAuthorized(telegramUsername);
+
+        if (credentials === undefined) {
+            throw new Error("You need to authorize first");
+        }
+
+        return this._lastFm.scrobbleAlbum(artist, album, true);
+    }
+
+    private _printRecentTracks(recentTracks: RecentTrack[]): string {
+        let result = "";
+
+        for (const recentTrack of recentTracks.reverse()) {
+            result += `${recentTrack.artistName} - ${recentTrack.albumTitle} - ${recentTrack.title} at ${new Date(Number.parseInt(recentTrack.timestamp) * 1000).toLocaleString()}\n`;
+        }
+
+        return result;
     }
 
     private async _isAuthorized(

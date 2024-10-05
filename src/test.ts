@@ -41,7 +41,7 @@ async function test(): Promise<void> {
             chat: { id: "296396609" },
             from: { id: 296396609, username: "IrvingWash" },
             message_id: "1",
-            text: "/list",
+            text: '/list',
         },
         update_id: "1",
     });
