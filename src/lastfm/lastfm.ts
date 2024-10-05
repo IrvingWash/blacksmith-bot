@@ -24,7 +24,7 @@ interface LastFmParams {
     baseUrl: string;
     apiKey: string;
     sharedSecret: string;
-    sessionKey: string;
+    sessionKey?: string;
 }
 
 export class LastFm {

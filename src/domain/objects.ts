@@ -56,3 +56,8 @@ export interface AlbumInfo {
 export interface WebhookInfo {
     url: string;
 }
+
+export interface MessagePayload {
+    chatId: string;
+    text: string;
+}

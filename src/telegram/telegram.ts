@@ -1,4 +1,4 @@
-import { WebhookInfo } from "../domain/objects";
+import { MessagePayload, WebhookInfo } from "../domain/objects";
 import { TelegramRequestsEnvironment } from "./telegram-requests-environment";
 import { TelegramTransport } from "./telegram-transport";
 
@@ -33,5 +33,15 @@ export class Telegram {
         }
 
         return { url: response.result.url };
+    }
+
+    public async sendMessage(message: MessagePayload): Promise<boolean> {
+        const response = await this._transport.sendMessage({
+            // biome-ignore lint/style/useNamingConvention: <explanation>
+            chat_id: message.chatId,
+            text: message.text,
+        });
+
+        return response.ok;
     }
 }

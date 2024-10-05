@@ -1,5 +1,9 @@
 import { telegramFetch } from "./telegram-fetch";
-import { TelegramResponse, TelegramWebhookInfo } from "./telegram-objects";
+import {
+    TelegramResponse,
+    TelegramSendMessagePayload,
+    TelegramWebhookInfo,
+} from "./telegram-objects";
 import { TelegramRequestsEnvironment } from "./telegram-requests-environment";
 
 export class TelegramTransport {
@@ -17,5 +21,11 @@ export class TelegramTransport {
         return telegramFetch<TelegramWebhookInfo>(
             this._requestsEnvironment.getWebhookInfo()
         );
+    }
+
+    public sendMessage(
+        message: TelegramSendMessagePayload
+    ): Promise<TelegramResponse<undefined>> {
+        return telegramFetch(this._requestsEnvironment.sendMessage(), message);
     }
 }

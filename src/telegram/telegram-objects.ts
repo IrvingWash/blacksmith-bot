@@ -18,6 +18,12 @@ export interface TelegramWebhookInfo {
     url: string;
 }
 
+export interface TelegramSendMessagePayload {
+    // biome-ignore lint/style/useNamingConvention: <explanation>
+    chat_id: string;
+    text: string;
+}
+
 export interface TelegramUpdate {
     // biome-ignore lint/style/useNamingConvention: <explanation>
     update_id: string;

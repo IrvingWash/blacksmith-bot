@@ -35,4 +35,13 @@ export class TelegramRequestsEnvironment {
             method: HttpMethod.Get,
         };
     }
+
+    public sendMessage(): RequestMetaInfo {
+        const url = new URL(`bot${this._botToken}/sendMessage`, this._baseUrl);
+
+        return {
+            url,
+            method: HttpMethod.Post,
+        };
+    }
 }

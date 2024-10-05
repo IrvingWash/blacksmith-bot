@@ -2,9 +2,9 @@
     "name": "blacksmith-bot",
     "version": "0.0.0",
     "description": "telegram bot for scrobbling to lastfm",
-    "main": "main.ts",
+    "main": "src/netlify/functions/scrobble-bot.ts",
     "scripts": {
-        "start": "tsx src/main.ts",
+        "start": "tsx src/netlify/functions/scrobble-bot.ts",
         "format": "biome format --error-on-warnings",
         "lint": "biome lint --error-on-warnings",
         "test": "vitest run --pass-with-no-tests",
@@ -31,6 +31,7 @@
         "vitest": "^2.1.2"
     },
     "dependencies": {
+        "@netlify/functions": "^2.8.2",
         "dotenv": "^16.4.5",
         "firebase": "^10.14.0",
         "md5": "^2.3.0"
