@@ -83,7 +83,11 @@ export class ScrobblerBot {
     ): Promise<boolean> {
         const url = await this._requestAccess(update.message.from.username);
 
-        return this.sendMessage(update.message.chat.id, url);
+        return this.sendMessage(
+            update.message.chat.id,
+            `[grant access to lastfm](${url})`,
+            "MarkdownV2"
+        );
     }
 
     private async _handleGetSessionCommand(
@@ -172,10 +176,15 @@ export class ScrobblerBot {
         );
     }
 
-    public sendMessage(chatId: string, text: string): Promise<boolean> {
+    public sendMessage(
+        chatId: string,
+        text: string,
+        parseMode?: string
+    ): Promise<boolean> {
         return this._telegram.sendMessage({
             chatId,
             text,
+            parseMode,
         });
     }
 

@@ -23,6 +23,8 @@ export interface TelegramSendMessagePayload {
     // biome-ignore lint/style/useNamingConvention: External API
     chat_id: string;
     text: string;
+    // biome-ignore lint/style/useNamingConvention: External API
+    parse_mode?: string;
 }
 
 export interface TelegramUpdate {

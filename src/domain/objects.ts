@@ -60,4 +60,5 @@ export interface WebhookInfo {
 export interface MessagePayload {
     chatId: string;
     text: string;
+    parseMode?: string;
 }

@@ -41,6 +41,8 @@ export class Telegram {
             // biome-ignore lint/style/useNamingConvention: External API
             chat_id: message.chatId,
             text: message.text,
+            // biome-ignore lint/style/useNamingConvention: External API
+            parse_mode: message.parseMode,
         });
 
         return response.ok;
