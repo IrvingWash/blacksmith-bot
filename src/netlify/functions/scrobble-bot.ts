@@ -14,7 +14,7 @@ export default async (req: Request): Promise<void> => {
 
     const update = (await req.json()) as TelegramUpdate;
 
-    if (update.edited_message !== undefined) {
+    if ("edited_message" in update) {
         return;
     }
 
