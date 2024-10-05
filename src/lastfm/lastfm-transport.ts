@@ -19,7 +19,7 @@ export class LastFmTransport {
         username: string,
         extended = false
     ): Promise<LastFmRecentTracks> {
-        const requestMetaInfo = this._requestsEnvironment.getRecentTracks(
+        const requestMetaInfo = this._requestsEnvironment.userGetRecentTracks(
             username,
             extended ? "1" : "0"
         );
@@ -30,7 +30,7 @@ export class LastFmTransport {
     public scrobble(
         params: LastFmScrobblePayload
     ): Promise<LastFmScrobbleResult> {
-        const requestMetaInfo = this._requestsEnvironment.scrobble(params);
+        const requestMetaInfo = this._requestsEnvironment.trackScrobble(params);
 
         return lastFmFetch(requestMetaInfo);
     }
@@ -38,7 +38,7 @@ export class LastFmTransport {
     public getAlbumInfo(
         params: LastFmGetAlbumInfoPayload
     ): Promise<LastFmAlbumInfo> {
-        const requestMetaInfo = this._requestsEnvironment.getAlbumInfo(params);
+        const requestMetaInfo = this._requestsEnvironment.albumGetInfo(params);
 
         return lastFmFetch(requestMetaInfo);
     }
