@@ -58,7 +58,7 @@ export class ScrobblerBot {
 
         if (
             update.message.text.startsWith(
-                `${telegramBotCommandsConfig.List.command}`
+                `/${telegramBotCommandsConfig.List.command}`
             )
         ) {
             const recentTracks = await this._listRecentTracks(
