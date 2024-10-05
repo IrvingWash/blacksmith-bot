@@ -5,9 +5,11 @@ import { EnvExtractor } from "../../utils/env-extractor";
 import { Telegram } from "../../telegram/telegram";
 import { LastFm } from "../../lastfm/lastfm";
 import { UserCredentials } from "../../domain/objects";
+import { TelegramUpdate } from "../../telegram/telegram-objects";
 
 // biome-ignore lint/style/noDefaultExport: <explanation>
-export default async (_req: Request): Promise<void> => {
+export default async (req: Request): Promise<void> => {
+    // Setup
     config();
 
     const envExtractor = new EnvExtractor();
@@ -34,7 +36,22 @@ export default async (_req: Request): Promise<void> => {
 
     const scrobbleBot = new ScrobblerBot(sessionStorage, telegram, lastFm);
 
-    await scrobbleBot.setWebhook(
-        "blacksmith-bot.netflify.io/.functions/scrobble-bot"
-    );
+    const webhookInfo = await scrobbleBot.getWebhookInfo();
+
+    if (webhookInfo.url === "") {
+        const result = await scrobbleBot.setWebhook(
+            "blacksmith-bot.netlify.io/.functions/scrobble-bot"
+        );
+
+        if (result === false) {
+            return;
+        }
+    }
+
+    // Work
+    const update = (await req.json()) as TelegramUpdate;
+
+    // biome-ignore lint/suspicious/noConsoleLog: <explanation>
+    // biome-ignore lint/suspicious/noConsole: <explanation>
+    console.log(update.message);
 };

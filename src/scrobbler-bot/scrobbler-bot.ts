@@ -1,4 +1,4 @@
-import { RecentTrack, UserCredentials } from "../domain/objects";
+import { RecentTrack, UserCredentials, WebhookInfo } from "../domain/objects";
 import { ISessionStorage } from "../session-storage/isession-storage";
 import { Telegram } from "../telegram/telegram";
 import { LastFm } from "../lastfm/lastfm";
@@ -16,6 +16,10 @@ export class ScrobblerBot {
         this._sessionStorage = sessionStorage;
         this._telegram = telegram;
         this._lastFm = lastFm;
+    }
+
+    public getWebhookInfo(): Promise<WebhookInfo> {
+        return this._telegram.getWebhookInfo();
     }
 
     public setWebhook(url: string): Promise<boolean> {
