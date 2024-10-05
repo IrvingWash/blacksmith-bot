@@ -2,6 +2,7 @@ import { RecentTrack, UserCredentials, WebhookInfo } from "../domain/objects";
 import { ISessionStorage } from "../session-storage/isession-storage";
 import { Telegram } from "../telegram/telegram";
 import { LastFm } from "../lastfm/lastfm";
+import { TelegramUpdate } from "../telegram/telegram-objects";
 
 export class ScrobblerBot {
     private readonly _sessionStorage: ISessionStorage<UserCredentials>;
@@ -26,7 +27,24 @@ export class ScrobblerBot {
         return this._telegram.setWebhook(url);
     }
 
-    public async requestAccess(telegramUsername: string): Promise<string> {
+    public async parseUpdate(update: TelegramUpdate): Promise<boolean> {
+        if (update.message.text.startsWith("/request_access")) {
+            const url = await this._requestAccess(update.message.from.username);
+
+            return this._sendMessage(update.message.chat.id, url);
+        }
+
+        return true;
+    }
+
+    private _sendMessage(chatId: string, text: string): Promise<boolean> {
+        return this._telegram.sendMessage({
+            chatId,
+            text,
+        });
+    }
+
+    private async _requestAccess(telegramUsername: string): Promise<string> {
         const grantResult = await this._lastFm.requestAccess();
 
         this._sessionStorage.save("session", telegramUsername, {
@@ -37,7 +55,7 @@ export class ScrobblerBot {
         return grantResult.url;
     }
 
-    public async getSession(telegramUsername: string): Promise<void> {
+    private async _getSession(telegramUsername: string): Promise<void> {
         const userSession = await this._sessionStorage.load(
             "session",
             telegramUsername
@@ -52,7 +70,7 @@ export class ScrobblerBot {
         await this._sessionStorage.save("session", telegramUsername, session);
     }
 
-    public async listRecentTracks(
+    private async _listRecentTracks(
         telegramUsername: string
     ): Promise<RecentTrack[]> {
         const credentials = await this._isAuthorized(telegramUsername);
