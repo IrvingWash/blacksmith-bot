@@ -1,2 +1,5 @@
+[build]
+command = "npm install --ignore-scripts"
+
 [functions]
 directory = "src/netlify/functions/"
