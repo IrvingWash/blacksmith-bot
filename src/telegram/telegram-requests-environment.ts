@@ -37,7 +37,19 @@ export class TelegramRequestsEnvironment {
     }
 
     public sendMessage(): RequestMetaInfo {
-        const url = new URL(`bot${this._botToken}/sendMessage`, this._baseUrl);
+        const url = new URL(`/bot${this._botToken}/sendMessage`, this._baseUrl);
+
+        return {
+            url,
+            method: HttpMethod.Post,
+        };
+    }
+
+    public setMyCommands(): RequestMetaInfo {
+        const url = new URL(
+            `/bot${this._botToken}/setMyCommands`,
+            this._baseUrl
+        );
 
         return {
             url,

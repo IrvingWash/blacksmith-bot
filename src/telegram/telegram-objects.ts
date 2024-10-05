@@ -10,7 +10,8 @@ interface TelegramFailResponse {
     description: string;
 }
 
-export type TelegramResponse<T> =
+// biome-ignore lint/complexity/noBannedTypes: <explanation>
+export type TelegramResponse<T = {}> =
     | TelegramSuccessResponse<T>
     | TelegramFailResponse;
 
@@ -34,10 +35,24 @@ export interface TelegramMessage {
     // biome-ignore lint/style/useNamingConvention: <explanation>
     message_id: string;
     from: TelegramUser;
+    chat: TelegramChat;
     text: string;
 }
 
 export interface TelegramUser {
     id: number;
     username: string;
+}
+
+export interface TelegramChat {
+    id: string;
+}
+
+export interface TelegramSetMyCommandsPayload {
+    commands: TelegramBotCommand[];
+}
+
+export interface TelegramBotCommand {
+    command: string;
+    description: string;
 }

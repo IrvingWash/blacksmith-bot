@@ -2,15 +2,32 @@ import { config } from "dotenv";
 import { Telegram } from "../telegram/telegram";
 import { EnvExtractor } from "../utils/env-extractor";
 
-config();
+setup().then();
 
-const envExtractor = new EnvExtractor();
+async function setup(): Promise<void> {
+    config();
 
-const telegram = new Telegram({
-    baseUrl: "https://api.telegram.org/",
-    botToken: envExtractor.telegramBotToken(),
-});
+    const envExtractor = new EnvExtractor();
 
-telegram.setWebhook(
-    "https://blacksmith-bot.netlify.app/.netlify/functions/scrobble-bot"
-);
+    const telegram = new Telegram({
+        baseUrl: "https://api.telegram.org/",
+        botToken: envExtractor.telegramBotToken(),
+    });
+
+    await telegram.setWebhook(
+        "https://blacksmith-bot.netlify.app/.netlify/functions/scrobble-bot"
+    );
+
+    await telegram.setMyCommands({
+        commands: [
+            {
+                command: "request_auth",
+                description: "Request authorization from lastfm",
+            },
+            {
+                command: "get_session",
+                description: "Get lastfm session",
+            },
+        ],
+    });
+}

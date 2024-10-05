@@ -2,6 +2,7 @@ import { telegramFetch } from "./telegram-fetch";
 import {
     TelegramResponse,
     TelegramSendMessagePayload,
+    TelegramSetMyCommandsPayload,
     TelegramWebhookInfo,
 } from "./telegram-objects";
 import { TelegramRequestsEnvironment } from "./telegram-requests-environment";
@@ -13,7 +14,7 @@ export class TelegramTransport {
         this._requestsEnvironment = requestsEnvironment;
     }
 
-    public setWebhook(url: string): Promise<TelegramResponse<undefined>> {
+    public setWebhook(url: string): Promise<TelegramResponse> {
         return telegramFetch(this._requestsEnvironment.setWebhook(), { url });
     }
 
@@ -25,7 +26,16 @@ export class TelegramTransport {
 
     public sendMessage(
         message: TelegramSendMessagePayload
-    ): Promise<TelegramResponse<undefined>> {
+    ): Promise<TelegramResponse> {
         return telegramFetch(this._requestsEnvironment.sendMessage(), message);
+    }
+
+    public setMyCommands(
+        commands: TelegramSetMyCommandsPayload
+    ): Promise<TelegramResponse> {
+        return telegramFetch(
+            this._requestsEnvironment.setMyCommands(),
+            commands
+        );
     }
 }

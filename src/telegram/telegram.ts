@@ -1,4 +1,5 @@
 import { MessagePayload, WebhookInfo } from "../domain/objects";
+import { TelegramSetMyCommandsPayload } from "./telegram-objects";
 import { TelegramRequestsEnvironment } from "./telegram-requests-environment";
 import { TelegramTransport } from "./telegram-transport";
 
@@ -41,6 +42,14 @@ export class Telegram {
             chat_id: message.chatId,
             text: message.text,
         });
+
+        return response.ok;
+    }
+
+    public async setMyCommands(
+        commands: TelegramSetMyCommandsPayload
+    ): Promise<boolean> {
+        const response = await this._transport.setMyCommands(commands);
 
         return response.ok;
     }
