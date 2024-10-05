@@ -7,7 +7,13 @@
     },
     "files": {
         "ignoreUnknown": false,
-        "ignore": ["node_module", "dist", "package-lock.json", ".env*"]
+        "ignore": [
+            "node_module",
+            "dist",
+            "package-lock.json",
+            ".env*",
+            "src/test.ts"
+        ]
     },
     "formatter": {
         "enabled": true,

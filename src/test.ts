@@ -1,14 +1,14 @@
 import { config } from "dotenv";
-import { ScrobblerBot } from "../../scrobbler-bot/scrobbler-bot";
-import { Firebase } from "../../firebase/firebase";
-import { EnvExtractor } from "../../utils/env-extractor";
-import { Telegram } from "../../telegram/telegram";
-import { LastFm } from "../../lastfm/lastfm";
-import { UserCredentials } from "../../domain/objects";
-import { TelegramUpdate } from "../../telegram/telegram-objects";
+import { EnvExtractor } from "./utils/env-extractor";
+import { Firebase } from "./firebase/firebase";
+import { UserCredentials } from "./domain/objects";
+import { Telegram } from "./telegram/telegram";
+import { LastFm } from "./lastfm/lastfm";
+import { ScrobblerBot } from "./scrobbler-bot/scrobbler-bot";
 
-// biome-ignore lint/style/noDefaultExport: <explanation>
-export default async (req: Request): Promise<void> => {
+test().then();
+
+async function test(): Promise<void> {
     // Setup
     config();
 
@@ -36,11 +36,13 @@ export default async (req: Request): Promise<void> => {
 
     const scrobbleBot = new ScrobblerBot(sessionStorage, telegram, lastFm);
 
-    const update = (await req.json()) as TelegramUpdate;
-
-    // biome-ignore lint/suspicious/noConsoleLog: <explanation>
-    // biome-ignore lint/suspicious/noConsole: <explanation>
-    console.log(update);
-
-    await scrobbleBot.parseUpdate(update);
-};
+    await scrobbleBot.parseUpdate({
+        message: {
+            chat: { id: "1" },
+            from: { id: 1, username: "IrvingWash" },
+            message_id: "1",
+            text: "/list",
+        },
+        update_id: "1",
+    });
+}
