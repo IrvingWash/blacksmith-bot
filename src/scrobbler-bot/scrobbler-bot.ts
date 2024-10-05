@@ -120,6 +120,19 @@ export class ScrobblerBot {
             );
         }
 
+        if (
+            update.message.text.startsWith(
+                `/${telegramBotCommandsConfig.Logout.command}`
+            )
+        ) {
+            await this._sessionStorage.clear(
+                "session",
+                update.message.from.username
+            );
+
+            return this._sendMessage(update.message.chat.id, "Logged out");
+        }
+
         return this._sendMessage(
             update.message.chat.id,
             `Unknown command: ${update.message.text}`
