@@ -10,7 +10,8 @@
         "test": "vitest run --pass-with-no-tests",
         "check": "npm run format && npm run lint && npm run test",
         "prepare": "husky",
-        "setup": "tsx src/scripts/setup-webhook.ts"
+        "setup": "tsx --tsconfig tsconfig.json src/scripts/setup-webhook.ts",
+        "integration": "tsx --tsconfig tsconfig.json src/test.ts"
     },
     "repository": {
         "type": "git",

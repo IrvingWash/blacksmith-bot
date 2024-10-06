@@ -308,7 +308,11 @@ export class ScrobblerBot {
         let result = "";
 
         for (const recentTrack of recentTracks.reverse()) {
-            result += `[${recentTrack.artistName} - ${recentTrack.albumTitle} - ${recentTrack.title} at ${new Date(Number.parseInt(recentTrack.timestamp) * 1000).toISOString()}](${recentTrack.lastFmUrl})\n`;
+            const dateString = new Date(
+                Number.parseInt(recentTrack.timestamp) * 1000
+            ).toUTCString();
+
+            result += `${recentTrack.artistName} - ${recentTrack.albumTitle} - ${recentTrack.title} at ${dateString}\n`;
         }
 
         return result;
