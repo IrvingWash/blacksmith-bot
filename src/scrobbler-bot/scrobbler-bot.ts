@@ -56,8 +56,12 @@ export class ScrobblerBot {
             return this._handleListCommand(update);
         }
 
-        if (this._isWithCommand(commandsConfig.Scrobble, update)) {
-            return this._handleScrobbleCommand(update);
+        if (this._isWithCommand(commandsConfig.ScrobbleAlbum, update)) {
+            return this._handleScrobbleAlbumCommand(update);
+        }
+
+        if (this._isWithCommand(commandsConfig.ScrobbleTrack, update)) {
+            return this._handleScrobbleTrackCommand(update);
         }
 
         if (this._isWithCommand(commandsConfig.Logout, update)) {
@@ -116,11 +120,53 @@ export class ScrobblerBot {
         );
     }
 
-    private async _handleScrobbleCommand(
+    private async _handleScrobbleTrackCommand(
         update: TelegramUpdate
     ): Promise<boolean> {
         const payload = update.message.text.split(
-            `/${commandsConfig.Scrobble.command} `
+            `/${commandsConfig.ScrobbleTrack.command} `
+        )[1];
+
+        if (payload === undefined) {
+            return this.sendMessage(
+                update.message.chat.id,
+                `Wrong payload: ${update.message.text}`
+            );
+        }
+
+        const [artist, track] = payload.split("-___-");
+
+        if (artist === undefined || track === undefined) {
+            return this.sendMessage(
+                update.message.chat.id,
+                `Wrong payload: ${update.message.text}`
+            );
+        }
+
+        const result = await this._scrobbleTrack(
+            update.message.from.username,
+            artist,
+            track
+        );
+
+        if (result.accepted) {
+            return this.sendMessage(
+                update.message.chat.id,
+                "Scrobbled (maybe)"
+            );
+        }
+
+        return this.sendMessage(
+            update.message.chat.id,
+            `Failed to scrobble: ${result.ignoringMessage}`
+        );
+    }
+
+    private async _handleScrobbleAlbumCommand(
+        update: TelegramUpdate
+    ): Promise<boolean> {
+        const payload = update.message.text.split(
+            `/${commandsConfig.ScrobbleAlbum.command} `
         )[1];
 
         if (payload === undefined) {
@@ -224,6 +270,24 @@ export class ScrobblerBot {
         }
 
         return this._lastFm.recentTracks(credentials.username);
+    }
+
+    private async _scrobbleTrack(
+        telegramUsername: string,
+        artist: string,
+        track: string
+    ): Promise<TrackScrobblingResult> {
+        const credentials = await this._isAuthorized(telegramUsername);
+
+        if (credentials === undefined) {
+            throw new Error("You need to authorize first");
+        }
+
+        return this._lastFm.scrobbleTrack({
+            artistName: artist,
+            trackName: track,
+            timestamp: Date.now(),
+        });
     }
 
     private async _scrobbleAlbum(

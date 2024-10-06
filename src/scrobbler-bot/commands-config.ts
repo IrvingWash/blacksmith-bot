@@ -15,10 +15,16 @@ export const commandsConfig = {
         description: "List recent tracks",
     },
     // biome-ignore lint/style/useNamingConvention: Enum member
-    Scrobble: {
-        command: "scrobble",
+    ScrobbleAlbum: {
+        command: "scrobble_album",
         description:
-            "Scrobble an album: `/scrobble Artist Name-___-Album Name`",
+            "Scrobble an album: `/scrobble_album Artist Name-___-Album Name`",
+    },
+    // biome-ignore lint/style/useNamingConvention: Enum member
+    ScrobbleTrack: {
+        command: "scrobble_track",
+        description:
+            "Scrobble an album: `/scrobble_track Artist Name-___-Track Name`",
     },
     // biome-ignore lint/style/useNamingConvention: Enum member
     Logout: {
