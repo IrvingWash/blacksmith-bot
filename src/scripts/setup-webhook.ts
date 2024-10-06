@@ -2,6 +2,7 @@ import { config } from "dotenv";
 import { Telegram } from "../telegram/telegram";
 import { EnvExtractor } from "../utils/env-extractor";
 import { commandsConfig } from "../scrobbler-bot/commands-config";
+import { extractErrorMessage } from "../utils/error-message-extractor";
 
 setup().then();
 
@@ -15,11 +16,23 @@ async function setup(): Promise<void> {
         botToken: envExtractor.telegramBotToken(),
     });
 
-    await telegram.setWebhook(
-        "https://blacksmith-bot.netlify.app/.netlify/functions/scrobble-bot"
-    );
+    try {
+        await telegram.setWebhook(
+            "https://blacksmith-bot.netlify.app/.netlify/functions/scrobble-bot"
+        );
+    } catch (e) {
+        // biome-ignore lint/suspicious/noConsole: <explanation>
+        console.log(extractErrorMessage(e));
 
-    await telegram.setMyCommands({
-        commands: Object.values(commandsConfig),
-    });
+        return;
+    }
+
+    try {
+        await telegram.setMyCommands({
+            commands: Object.values(commandsConfig),
+        });
+    } catch (e) {
+        // biome-ignore lint/suspicious/noConsole: <explanation>
+        console.log(extractErrorMessage(e));
+    }
 }
