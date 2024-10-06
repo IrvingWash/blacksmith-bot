@@ -34,6 +34,8 @@ async function test(): Promise<void> {
         baseUrl: "http://ws.audioscrobbler.com/2.0/",
     });
 
+    console.log(await telegram.getWebhookInfo());
+
     const scrobbleBot = new ScrobblerBot(sessionStorage, telegram, lastFm);
 
     await scrobbleBot.parseUpdate({
@@ -41,7 +43,7 @@ async function test(): Promise<void> {
             chat: { id: "296396609" },
             from: { id: 296396609, username: "IrvingWash" },
             message_id: "1",
-            text: '/scrobble_album The Mars Volta-___-Frances The Mute',
+            text: '/list',
         },
         update_id: "1",
     });
