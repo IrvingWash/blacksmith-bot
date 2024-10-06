@@ -79,12 +79,14 @@ export class LastFmRequestsEnvironment {
 
     public userGetRecentTracks(
         user: string,
+        limit?: number,
         extended: LastFmBoolean = "0"
     ): RequestMetaInfo {
         const url = new URL(this._baseUrl);
 
         addQueryParams(url, {
             user,
+            limit,
             extended,
             // biome-ignore lint/style/useNamingConvention: External API
             api_key: this._apiKey,

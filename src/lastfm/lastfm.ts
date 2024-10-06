@@ -74,9 +74,13 @@ export class LastFm {
         };
     }
 
-    public async recentTracks(username: string): Promise<RecentTrack[]> {
+    public async recentTracks(
+        username: string,
+        limit?: number
+    ): Promise<RecentTrack[]> {
         const lastFmRecentTracks = await this._transport.getRecentTracks(
             username,
+            limit,
             true
         );
 

@@ -1,5 +1,8 @@
 import { MessagePayload, WebhookInfo } from "../domain/objects";
-import { TelegramSetMyCommandsPayload } from "./telegram-objects";
+import {
+    TelegramResponse,
+    TelegramSetMyCommandsPayload,
+} from "./telegram-objects";
 import { TelegramRequestsEnvironment } from "./telegram-requests-environment";
 import { TelegramTransport } from "./telegram-transport";
 
@@ -36,16 +39,14 @@ export class Telegram {
         return { url: response.result.url };
     }
 
-    public async sendMessage(message: MessagePayload): Promise<boolean> {
-        const response = await this._transport.sendMessage({
+    public sendMessage(message: MessagePayload): Promise<TelegramResponse> {
+        return this._transport.sendMessage({
             // biome-ignore lint/style/useNamingConvention: External API
             chat_id: message.chatId,
             text: message.text,
             // biome-ignore lint/style/useNamingConvention: External API
             parse_mode: message.parseMode,
         });
-
-        return response.ok;
     }
 
     public async setMyCommands(

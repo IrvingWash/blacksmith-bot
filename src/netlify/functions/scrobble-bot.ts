@@ -24,7 +24,11 @@ export default async (req: Request): Promise<void> => {
     const scrobbleBot = createScrobbleBot();
 
     try {
-        await scrobbleBot.parseUpdate(update);
+        const result = await scrobbleBot.parseUpdate(update);
+
+        if (!result.ok) {
+            throw new Error(result.description);
+        }
     } catch (error) {
         // biome-ignore lint/suspicious/noConsole: Logging
         console.log(error);

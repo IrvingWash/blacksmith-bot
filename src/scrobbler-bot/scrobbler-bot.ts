@@ -9,6 +9,7 @@ import { Telegram } from "../telegram/telegram";
 import { LastFm } from "../lastfm/lastfm";
 import {
     TelegramBotCommand,
+    TelegramResponse,
     TelegramUpdate,
 } from "../telegram/telegram-objects";
 import { commandsConfig } from "./commands-config";
@@ -43,7 +44,7 @@ export class ScrobblerBot {
         return update.message.text.startsWith(`/${botCommand.command}`);
     }
 
-    public parseUpdate(update: TelegramUpdate): Promise<boolean> {
+    public parseUpdate(update: TelegramUpdate): Promise<TelegramResponse> {
         if (this._isWithCommand(commandsConfig.RequestAuth, update)) {
             return this._handleRequestAuthCommand(update);
         }
@@ -84,7 +85,7 @@ export class ScrobblerBot {
 
     private async _handleRequestAuthCommand(
         update: TelegramUpdate
-    ): Promise<boolean> {
+    ): Promise<TelegramResponse> {
         const url = await this._requestAccess(update.message.from.username);
 
         return this.sendMessage(
@@ -96,7 +97,7 @@ export class ScrobblerBot {
 
     private async _handleGetSessionCommand(
         update: TelegramUpdate
-    ): Promise<boolean> {
+    ): Promise<TelegramResponse> {
         try {
             await this._getSession(update.message.from.username);
         } catch {
@@ -109,7 +110,9 @@ export class ScrobblerBot {
         return this.sendMessage(update.message.chat.id, "Authorized");
     }
 
-    private async _handleListCommand(update: TelegramUpdate): Promise<boolean> {
+    private async _handleListCommand(
+        update: TelegramUpdate
+    ): Promise<TelegramResponse> {
         const recentTracks = await this._listRecentTracks(
             update.message.from.username
         );
@@ -122,7 +125,7 @@ export class ScrobblerBot {
 
     private async _handleScrobbleTrackCommand(
         update: TelegramUpdate
-    ): Promise<boolean> {
+    ): Promise<TelegramResponse> {
         const payload = update.message.text.split(
             `/${commandsConfig.ScrobbleTrack.command} `
         )[1];
@@ -164,7 +167,7 @@ export class ScrobblerBot {
 
     private async _handleScrobbleAlbumCommand(
         update: TelegramUpdate
-    ): Promise<boolean> {
+    ): Promise<TelegramResponse> {
         const payload = update.message.text.split(
             `/${commandsConfig.ScrobbleAlbum.command} `
         )[1];
@@ -206,7 +209,7 @@ export class ScrobblerBot {
 
     private async _handleLogoutCommand(
         update: TelegramUpdate
-    ): Promise<boolean> {
+    ): Promise<TelegramResponse> {
         await this._sessionStorage.clear(
             "session",
             update.message.from.username
@@ -215,7 +218,9 @@ export class ScrobblerBot {
         return this.sendMessage(update.message.chat.id, "Logged out");
     }
 
-    private _handleHelpCommand(update: TelegramUpdate): Promise<boolean> {
+    private _handleHelpCommand(
+        update: TelegramUpdate
+    ): Promise<TelegramResponse> {
         return this.sendMessage(
             update.message.chat.id,
             "First call `/request_auth` and go to the generated lastfm auth url to grant access.\nThen use `/get_session` to let the bot receive a permanent token."
@@ -226,7 +231,7 @@ export class ScrobblerBot {
         chatId: string,
         text: string,
         parseMode?: string
-    ): Promise<boolean> {
+    ): Promise<TelegramResponse> {
         return this._telegram.sendMessage({
             chatId,
             text,
@@ -269,7 +274,7 @@ export class ScrobblerBot {
             throw new Error("You need to authorize first");
         }
 
-        return this._lastFm.recentTracks(credentials.username);
+        return this._lastFm.recentTracks(credentials.username, 30);
     }
 
     private async _scrobbleTrack(

@@ -17,10 +17,12 @@ export class LastFmTransport {
 
     public getRecentTracks(
         username: string,
+        limit?: number,
         extended = false
     ): Promise<LastFmRecentTracks> {
         const requestMetaInfo = this._requestsEnvironment.userGetRecentTracks(
             username,
+            limit,
             extended ? "1" : "0"
         );
 

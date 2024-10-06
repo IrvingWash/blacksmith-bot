@@ -38,7 +38,7 @@ async function test(): Promise<void> {
 
     const scrobbleBot = new ScrobblerBot(sessionStorage, telegram, lastFm);
 
-    await scrobbleBot.parseUpdate({
+    const result = await scrobbleBot.parseUpdate({
         message: {
             chat: { id: "296396609" },
             from: { id: 296396609, username: "IrvingWash" },
@@ -47,4 +47,8 @@ async function test(): Promise<void> {
         },
         update_id: "1",
     });
+
+    if (!result.ok) {
+        await scrobbleBot.sendMessage("296396609", `Something went wrong: ${result.description}`);
+    }
 }
