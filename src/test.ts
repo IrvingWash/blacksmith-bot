@@ -41,7 +41,7 @@ async function test(): Promise<void> {
             chat: { id: "296396609" },
             from: { id: 296396609, username: "IrvingWash" },
             message_id: "1",
-            text: '/request_auth',
+            text: '/scrobble_album The Mars Volta-___-Frances The Mute',
         },
         update_id: "1",
     });
